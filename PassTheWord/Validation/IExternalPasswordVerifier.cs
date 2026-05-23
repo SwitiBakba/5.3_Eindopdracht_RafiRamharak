@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PassTheWord.Validation;
 
-namespace PassTheWord.Validation
+public interface IExternalPasswordVerifier
 {
-    internal interface IExternalPasswordVerifier
-    {
-    }
+    string Name { get; }
+
+    string HashAlgorithmName { get; }
+
+    bool IsSafe(string passwordHash);
 }

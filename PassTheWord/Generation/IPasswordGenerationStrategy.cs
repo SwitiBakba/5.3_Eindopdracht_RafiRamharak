@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PassTheWord.Generation;
 
-namespace PassTheWord.Generation
+public interface IPasswordGenerationStrategy
 {
-    internal interface IPasswordGenerationStrategy
-    {
-    }
+    string Generate(PasswordOptions options);
 }

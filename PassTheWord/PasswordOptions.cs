@@ -18,7 +18,7 @@ public class PasswordOptions
 
     public bool ExcludeSimilarCharacters { get; set; }
 
-    public List<IAlphabet> Alphabets { get; set; } = new() { new LatinAlphabet() };
+    public List<IAlphabet> Alphabets { get; set; } = [new LatinAlphabet()];
 
     public Dictionary<char, char> Replacements { get; set; } = new();
 

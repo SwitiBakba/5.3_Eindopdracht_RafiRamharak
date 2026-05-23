@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PassTheWord.Alphabets;
 
-namespace PassTheWord.Alphabets
+public class LatinAlphabet : IAlphabet
 {
-    internal class LatinAlphabet
-    {
-    }
+    public string Name => "Latin";
+
+    public string UppercaseCharacters => "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    public string LowercaseCharacters => "abcdefghijklmnopqrstuvwxyz";
 }

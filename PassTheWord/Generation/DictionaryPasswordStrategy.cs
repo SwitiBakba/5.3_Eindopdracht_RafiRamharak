@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 
-namespace PassTheWord.Generation
+namespace PassTheWord.Generation;
+
+public class DictionaryPasswordStrategy : IPasswordGenerationStrategy
 {
-    internal class DictionaryPasswordStrategy
+    public string Generate(PasswordOptions options)
     {
+        if (!options.UseDictionary)
+            throw new InvalidOperationException("Dictionary strategy requires dictionary words.");
+
+        List<string> words = options.DictionaryWords!;
+
+        string password = "";
+
+        while (password.Length < options.MinimumLength)
+        {
+            string word = words[RandomNumberGenerator.GetInt32(words.Count)];
+
+            if (password.Length + word.Length > options.MaximumLength)
+                continue;
+
+            password += word;
+        }
+
+        return password;
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PassTheWord.Alphabets;
 
-namespace PassTheWord.Aplhabets
+public interface IAlphabet
 {
-    internal interface IAlphabet
-    {
-    }
+    string Name { get; }
+    string UppercaseCharacters { get; }
+    string LowercaseCharacters { get; }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PassTheWord.Alphabets;
 
-namespace PassTheWord.Alphabets
+public class CyrillicAlphabet : IAlphabet
 {
-    internal class CyrillicAlphabet
-    {
-    }
+    public string Name => "Cyrillic";
+
+    public string UppercaseCharacters => "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+
+    public string LowercaseCharacters => "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 }
