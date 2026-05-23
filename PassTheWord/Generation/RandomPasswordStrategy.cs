@@ -41,8 +41,6 @@ public class RandomPasswordStrategy : IPasswordGenerationStrategy
         if (options.RequireSymbol)
             requiredCharacters.Add(GetRandomCharacter(symbolAlphabet));
 
-        // Shuffle required characters so they do not always appear at the beginning.
-
         string fullAlphabet = uppercaseAlphabet + lowercaseAlphabet + digitAlphabet + symbolAlphabet;
 
         int length = RandomNumberGenerator.GetInt32(
@@ -57,6 +55,7 @@ public class RandomPasswordStrategy : IPasswordGenerationStrategy
             passwordCharacters.Add(GetRandomCharacter(fullAlphabet));
         }
 
+        // Shuffle required characters so they do not always appear at the beginning.
         Shuffle(passwordCharacters);
 
         return new string([.. passwordCharacters]);
