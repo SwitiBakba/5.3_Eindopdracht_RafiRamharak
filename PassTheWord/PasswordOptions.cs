@@ -1,12 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PassTheWord.Alphabets;
 
-namespace PassTheWord
+namespace PassTheWord;
+
+public class PasswordOptions
 {
-    internal class PasswordOptions
-    {
-    }
+    public int MinimumLength { get; set; } = 8;
+    public int MaximumLength { get; set; } = 20;
+
+    public bool UseUppercase { get; set; } = true;
+    public bool UseLowercase { get; set; } = true;
+    public bool UseDigits { get; set; } = true;
+    public bool UseSymbols { get; set; } = true;
+
+    public bool RequireUppercase { get; set; }
+    public bool RequireDigit { get; set; }
+    public bool RequireSymbol { get; set; }
+
+    public bool ExcludeSimilarCharacters { get; set; }
+
+    public List<IAlphabet> Alphabets { get; set; } = new() { new LatinAlphabet() };
+
+    public Dictionary<char, char> Replacements { get; set; } = new();
+
+    public List<string>? DictionaryWords { get; set; }
+
+    public bool UseDictionary => DictionaryWords is { Count: > 0 };
 }
