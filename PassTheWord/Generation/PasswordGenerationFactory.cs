@@ -1,5 +1,8 @@
 ﻿namespace PassTheWord.Generation;
 
+/// <summary>
+/// Factory responsible for selecting the correct password generation strategy.
+/// </summary>
 public class PasswordGenerationFactory
 {
     public IPasswordGenerationStrategy Create(PasswordOptions options)

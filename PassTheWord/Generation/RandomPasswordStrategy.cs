@@ -2,6 +2,9 @@
 
 namespace PassTheWord.Generation;
 
+/// <summary>
+/// Generates passwords by randomly selecting characters from the configured alphabets and character groups.
+/// </summary>
 public class RandomPasswordStrategy : IPasswordGenerationStrategy
 {
     private const string Digits = "0123456789";
@@ -37,6 +40,8 @@ public class RandomPasswordStrategy : IPasswordGenerationStrategy
 
         if (options.RequireSymbol)
             requiredCharacters.Add(GetRandomCharacter(symbolAlphabet));
+
+        // Shuffle required characters so they do not always appear at the beginning.
 
         string fullAlphabet = uppercaseAlphabet + lowercaseAlphabet + digitAlphabet + symbolAlphabet;
 

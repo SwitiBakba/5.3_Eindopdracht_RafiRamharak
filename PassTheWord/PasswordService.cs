@@ -5,6 +5,9 @@ using PassTheWord.Validation;
 
 namespace PassTheWord;
 
+/// <summary>
+/// Facade that coordinates validation, password generation, replacements and external verification.
+/// </summary>
 public class PasswordService
 {
     private readonly PasswordOptionsValidator _optionsValidator;
@@ -33,6 +36,7 @@ public class PasswordService
         _optionsValidator.Validate(options);
 
         IPasswordGenerationStrategy strategy = _generationFactory.Create(options);
+        _logger.Info($"Selected generation strategy: {strategy.GetType().Name}.");
 
         for (int attempt = 1; attempt <= 10; attempt++)
         {
@@ -49,6 +53,7 @@ public class PasswordService
             }
         }
 
+        _logger.Warning("Password generation failed after all attempts.");
         throw new InvalidOperationException("Could not generate a safe password after 10 attempts.");
     }
 }

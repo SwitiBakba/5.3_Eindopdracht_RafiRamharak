@@ -1,5 +1,8 @@
 ﻿namespace PassTheWord.Logging;
 
+/// <summary>
+/// Console-based logger that writes messages depending on the configured log level.
+/// </summary>
 public class ConsoleLogger : ILogger
 {
     public LogLevel Level { get; }

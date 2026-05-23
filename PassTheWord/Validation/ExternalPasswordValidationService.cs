@@ -4,6 +4,9 @@ using PassTheWord.Logging;
 
 namespace PassTheWord.Validation;
 
+/// <summary>
+/// Handles runtime-registered external password verifiers.
+/// </summary>
 public class ExternalPasswordValidationService
 {
     private readonly List<IExternalPasswordVerifier> _verifiers = [];
@@ -30,6 +33,7 @@ public class ExternalPasswordValidationService
 
         foreach (IExternalPasswordVerifier verifier in _verifiers)
         {
+            _logger.Info($"Checking password with external verifier: {verifier.Name}.");
             string hash = HashPassword(password, verifier.HashAlgorithmName);
 
             bool isSafe = verifier.IsSafe(hash);

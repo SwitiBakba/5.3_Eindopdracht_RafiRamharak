@@ -1,5 +1,8 @@
 ﻿namespace PassTheWord.Validation;
 
+/// <summary>
+/// Validates password options before password generation starts.
+/// </summary>
 public class PasswordOptionsValidator
 {
     public void Validate(PasswordOptions options)
@@ -27,6 +30,7 @@ public class PasswordOptionsValidator
 
         foreach (var alphabet in options.Alphabets)
         {
+            // Surrogate characters are rejected because this assignment focuses on characters in the Basic Multilingual Plane.
             ValidateNoSurrogates(alphabet.UppercaseCharacters, $"{alphabet.Name} uppercase characters");
             ValidateNoSurrogates(alphabet.LowercaseCharacters, $"{alphabet.Name} lowercase characters");
         }

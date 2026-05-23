@@ -2,6 +2,9 @@
 
 namespace PassTheWord.Replacements;
 
+/// <summary>
+/// Applies optional character replacements to a generated password.
+/// </summary>
 public class CharacterReplacementService
 {
     public string Apply(string password, IReadOnlyDictionary<char, char> replacements)

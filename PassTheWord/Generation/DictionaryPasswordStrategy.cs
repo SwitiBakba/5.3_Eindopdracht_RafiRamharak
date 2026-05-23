@@ -2,8 +2,12 @@
 
 namespace PassTheWord.Generation;
 
+/// <summary>
+/// Generates passwords by combining random words from a configured dictionary.
+/// </summary>
 public class DictionaryPasswordStrategy : IPasswordGenerationStrategy
 {
+    // Prevents an infinite loop when the dictionary words cannot fit within the configured length.
     private const int MaximumAttempts = 1000;
 
     public string Generate(PasswordOptions options)

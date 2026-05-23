@@ -1,5 +1,8 @@
 ﻿namespace PassTheWord.Logging;
 
+/// <summary>
+/// Logger abstraction used to avoid direct Console.WriteLine calls throughout the application.
+/// </summary>
 public interface ILogger
 {
     LogLevel Level { get; }

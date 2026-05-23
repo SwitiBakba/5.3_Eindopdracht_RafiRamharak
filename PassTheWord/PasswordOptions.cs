@@ -2,6 +2,9 @@
 
 namespace PassTheWord;
 
+/// <summary>
+/// Contains all configurable options used during password generation.
+/// </summary>
 public class PasswordOptions
 {
     public int MinimumLength { get; set; } = 8;
@@ -24,5 +27,8 @@ public class PasswordOptions
 
     public List<string>? DictionaryWords { get; set; }
 
+    /// <summary>
+    /// Determines whether dictionary-based password generation should be used.
+    /// </summary>
     public bool UseDictionary => DictionaryWords is { Count: > 0 };
 }

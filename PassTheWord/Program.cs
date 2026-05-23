@@ -9,6 +9,8 @@ internal class Program
     {
         ILogger logger = new ConsoleLogger(LogLevel.All);
 
+        logger.Info("PassTheWord started.");
+
         PasswordService passwordService = new(logger);
 
         PasswordOptions options = new()
@@ -41,6 +43,8 @@ internal class Program
             }
         };
 
+        logger.Info("Password options configured.");
+
         try
         {
             string password = passwordService.GeneratePassword(options);
@@ -51,5 +55,7 @@ internal class Program
         {
             logger.Warning(exception.Message);
         }
+
+        logger.Info("PassTheWord finished.");
     }
 }
