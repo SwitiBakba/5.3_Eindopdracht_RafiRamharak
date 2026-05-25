@@ -1,5 +1,6 @@
 ﻿using PassTheWord.Alphabets;
 using PassTheWord.Logging;
+using PassTheWord.Validation;
 
 namespace PassTheWord;
 
@@ -12,6 +13,11 @@ internal class Program
         logger.Info("PassTheWord started.");
 
         PasswordService passwordService = new(logger);
+
+        HaveIBeenPwnedApiClient haveIBeenPwnedApiClient = new();
+        HaveIBeenPwnedPasswordVerifierAdapter haveIBeenPwnedAdapter = new(haveIBeenPwnedApiClient);
+
+        passwordService.AddExternalVerifier(haveIBeenPwnedAdapter);
 
         PasswordOptions options = new()
         {
