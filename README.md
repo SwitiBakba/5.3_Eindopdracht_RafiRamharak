@@ -53,7 +53,7 @@ PassTheWord
 | `PasswordService.cs` | Coördineert het volledige generatieproces |
 | `PasswordOptions.cs` | Bevat alle configuratieopties |
 | `Alphabets` | Ondersteuning voor meerdere alfabetten |
-| `Generation` | Verschillende generation strategies |
+| `Generation` | Verschillende generatie-strategieën |
 | `Validation` | Validatie en externe verificatie |
 | `Replacements` | Optionele character replacements |
 | `Logging` | Logging systeem met meerdere log levels |
@@ -122,7 +122,9 @@ Daardoor blijft `Program.cs` klein en overzichtelijk.
 
 ---
 
-## Adapter Point
+
+## Adapter Pattern
+
 
 Gebruikt in:
 
@@ -134,6 +136,19 @@ De opdracht vereist ondersteuning voor externe wachtwoordvalidatie.
 Met `IExternalPasswordVerifier` kunnen externe diensten gekoppeld worden zonder dat de rest van de applicatie aangepast hoeft te worden.
 
 Externe services ontvangen nooit het echte wachtwoord, maar alleen een hash van het wachtwoord.
+
+---
+
+# Externe wachtwoordvalidatie
+
+De applicatie bevat een adapter voor de
+Have I Been Pwned Pwned Passwords API.
+
+Deze adapter gebruikt het k-Anonymity model:
+alleen de eerste 5 karakters van een SHA1-hash
+worden naar de API gestuurd.
+Het volledige wachtwoord of de volledige hash
+verlaat nooit de applicatie.
 
 ---
 
@@ -170,7 +185,6 @@ Hiermee is ondersteuning voor het Russisch-cyrillische alfabet toegevoegd zoals 
 
 ---
 
-# Externe wachtwoordvalidatie
 
 Externe validators moeten `IExternalPasswordVerifier` implementeren.
 
@@ -267,6 +281,7 @@ De replacements worden willekeurig toegepast om variatie te behouden.
 
 ---
 
+
 # Tests
 
 De solution bevat een apart testproject:
@@ -275,9 +290,16 @@ De solution bevat een apart testproject:
 PassTheWord.Tests
 ```
 
+De tests zijn geschreven met NUnit.
+
 Voorbeeldtests:
 
-- `ConsoleLoggerTests`
+- PasswordOptionsValidatorTests
+- RandomPasswordStrategyTests
+- DictionaryPasswordStrategyTests
+- PasswordServiceTests
+- ExternalPasswordValidationServiceTests
+- ConsoleLoggerTests
 
 Tests kunnen uitgevoerd worden met:
 
