@@ -4,7 +4,8 @@
 /// Client for the Have I Been Pwned Pwned Passwords range API.
 /// This class represents the external service/adaptee in the Adapter Pattern.
 /// </summary>
-public class HaveIBeenPwnedApiClient
+
+public class HaveIBeenPwnedApiClient : IHaveIBeenPwnedApiClient
 {
     private readonly HttpClient _httpClient;
 

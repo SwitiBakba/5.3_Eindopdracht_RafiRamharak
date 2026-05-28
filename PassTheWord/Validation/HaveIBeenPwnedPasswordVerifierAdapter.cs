@@ -6,9 +6,9 @@
 /// </summary>
 public class HaveIBeenPwnedPasswordVerifierAdapter : IExternalPasswordVerifier
 {
-    private readonly HaveIBeenPwnedApiClient _apiClient;
+    private readonly IHaveIBeenPwnedApiClient _apiClient;
 
-    public HaveIBeenPwnedPasswordVerifierAdapter(HaveIBeenPwnedApiClient apiClient)
+    public HaveIBeenPwnedPasswordVerifierAdapter(IHaveIBeenPwnedApiClient apiClient)
     {
         _apiClient = apiClient;
     }
