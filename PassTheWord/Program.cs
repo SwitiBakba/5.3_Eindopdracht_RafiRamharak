@@ -17,7 +17,12 @@ internal class Program
         HaveIBeenPwnedApiClient haveIBeenPwnedApiClient = new();
         HaveIBeenPwnedPasswordVerifierAdapter haveIBeenPwnedAdapter = new(haveIBeenPwnedApiClient);
 
-        passwordService.AddExternalVerifier(haveIBeenPwnedAdapter);
+        bool useHaveIBeenPwned = true;
+
+        if (useHaveIBeenPwned)
+        {
+            passwordService.AddExternalVerifier(haveIBeenPwnedAdapter);
+        }
 
         PasswordOptions options = new()
         {
@@ -35,11 +40,11 @@ internal class Program
 
             ExcludeSimilarCharacters = true,
 
-            Alphabets = new List<IAlphabet>
-            {
+            Alphabets =
+            [
                 new LatinAlphabet(),
                 new CyrillicAlphabet()
-            },
+            ],
 
             Replacements = new Dictionary<char, char>
             {

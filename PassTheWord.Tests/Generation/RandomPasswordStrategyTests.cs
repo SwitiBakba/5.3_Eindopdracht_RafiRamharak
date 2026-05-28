@@ -1,4 +1,5 @@
-﻿using PassTheWord.Generation;
+﻿using PassTheWord.Alphabets;
+using PassTheWord.Generation;
 
 namespace PassTheWord.Tests.Generation;
 
@@ -80,5 +81,35 @@ public class RandomPasswordStrategyTests
         Assert.That(password, Does.Not.Contain("1"));
         Assert.That(password, Does.Not.Contain("O"));
         Assert.That(password, Does.Not.Contain("0"));
+    }
+
+    [Test]
+    public void Generate_WithOnlyCyrillicAlphabet_OnlyContainsCyrillicLetters()
+    {
+        var strategy = new RandomPasswordStrategy();
+
+        var options = new PasswordOptions
+        {
+            MinimumLength = 50,
+            MaximumLength = 50,
+            UseUppercase = true,
+            UseLowercase = true,
+            UseDigits = false,
+            UseSymbols = false,
+            Alphabets = new List<IAlphabet>
+        {
+            new CyrillicAlphabet()
+        }
+        };
+
+        string password = strategy.Generate(options);
+
+        Assert.That(password, Is.Not.Empty);
+        Assert.That(password.All(IsCyrillicLetter), Is.True);
+    }
+
+    private static bool IsCyrillicLetter(char character)
+    {
+        return character is >= 'А' and <= 'я' or 'Ё' or 'ё';
     }
 }
