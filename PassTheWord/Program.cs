@@ -46,7 +46,17 @@ internal class Program
                 { 'o', '0' },
                 { 'i', '1' },
                 { 's', '$' }
-            }
+            },
+
+            // Optional for DictionaryPasswordStrategy
+            //DictionaryWords =
+            //[
+            //    "hallo",
+            //    "wereld",
+            //    "kat",
+            //    "hond"
+            //]
+
         };
 
         logger.Info("Password options configured.");
