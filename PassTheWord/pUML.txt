@@ -1,6 +1,16 @@
 @startuml
 !theme vibrant
+
+top to bottom direction
+
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 35
+skinparam ranksep 45
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam wrapWidth 220
+skinparam maxMessageSize 120
 
 package "PassTheWord" {
     class Program <<Client>> {
@@ -37,49 +47,6 @@ package "PassTheWord" {
     }
 }
 
-package "Alphabets" {
-    interface IAlphabet {
-        + Name : string
-        + UppercaseCharacters : string
-        + LowercaseCharacters : string
-    }
-
-    class LatinAlphabet <<ConcreteAlphabet>> {
-        + Name : string
-        + UppercaseCharacters : string
-        + LowercaseCharacters : string
-    }
-
-    class CyrillicAlphabet <<ConcreteAlphabet>> {
-        + Name : string
-        + UppercaseCharacters : string
-        + LowercaseCharacters : string
-    }
-}
-
-package "Generation - Strategy Pattern" {
-    interface IPasswordGenerationStrategy <<Strategy>> {
-        + Generate(options : PasswordOptions) : string
-    }
-
-    class RandomPasswordStrategy <<ConcreteStrategy>> {
-        - Digits : string
-        - DigitsWithoutSimilar : string
-        - Symbols : string
-        - SimilarCharacters : string
-        + Generate(options : PasswordOptions) : string
-    }
-
-    class DictionaryPasswordStrategy <<ConcreteStrategy>> {
-        - MaximumAttempts : int
-        + Generate(options : PasswordOptions) : string
-    }
-
-    class PasswordGenerationFactory <<Factory>> {
-        + Create(options : PasswordOptions) : IPasswordGenerationStrategy
-    }
-}
-
 package "Logging" {
     enum LogLevel {
         None
@@ -101,9 +68,58 @@ package "Logging" {
     }
 }
 
+package "Alphabets" {
+    interface IAlphabet {
+        + Name : string
+        + UppercaseCharacters : string
+        + LowercaseCharacters : string
+    }
+
+    class LatinAlphabet {
+        + Name : string
+        + UppercaseCharacters : string
+        + LowercaseCharacters : string
+    }
+
+    class CyrillicAlphabet {
+        + Name : string
+        + UppercaseCharacters : string
+        + LowercaseCharacters : string
+    }
+}
+
 package "Replacements" {
     class CharacterReplacementService {
         + Apply(password : string, replacements : IReadOnlyDictionary<char, char>) : string
+    }
+}
+
+package "Generation - Strategy Pattern" {
+    interface IPasswordGenerationStrategy <<Strategy>> {
+        + Generate(options : PasswordOptions) : string
+    }
+
+    class PasswordGenerationFactory <<Factory>> {
+        + Create(options : PasswordOptions) : IPasswordGenerationStrategy
+    }
+
+    class RandomPasswordStrategy <<ConcreteStrategy>> {
+        - Digits : string
+        - DigitsWithoutSimilar : string
+        - Symbols : string
+        - SimilarCharacters : string
+
+        + Generate(options : PasswordOptions) : string
+        - BuildUppercaseAlphabet(options : PasswordOptions) : string
+        - BuildLowercaseAlphabet(options : PasswordOptions) : string
+        - RemoveSimilarCharacters(characters : string) : string
+        - GetRandomCharacter(characters : string) : char
+        - Shuffle(characters : List<char>) : void
+    }
+
+    class DictionaryPasswordStrategy <<ConcreteStrategy>> {
+        - MaximumAttempts : int
+        + Generate(options : PasswordOptions) : string
     }
 }
 
@@ -113,47 +129,94 @@ package "Validation" {
         - ValidateNoSurrogates(value : string, description : string) : void
     }
 
+    class ExternalPasswordValidationService {
+        - _verifiers : List<IExternalPasswordVerifier>
+        - _logger : ILogger
+
+        + ExternalPasswordValidationService(logger : ILogger)
+        + AddVerifier(verifier : IExternalPasswordVerifier) : void
+        + IsSafe(password : string) : bool
+        - HashPassword(password : string, hashAlgorithmName : string) : string
+    }
+
     interface IExternalPasswordVerifier <<Target Interface>> {
         + Name : string
         + HashAlgorithmName : string
         + IsSafe(passwordHash : string) : bool
     }
 
-    class ExternalPasswordValidationService <<External Validation Context>> {
-        - _verifiers : List<IExternalPasswordVerifier>
-        - _logger : ILogger
-        + ExternalPasswordValidationService(logger : ILogger)
-        + AddVerifier(verifier : IExternalPasswordVerifier) : void
-        + IsSafe(password : string) : bool
-        - HashPassword(password : string, hashAlgorithmName : string) : string
+    interface IHaveIBeenPwnedApiClient {
+        + GetHashSuffixes(hashPrefix : string) : string
+    }
+
+    class HaveIBeenPwnedApiClient <<Adaptee>> {
+        - _httpClient : HttpClient
+
+        + HaveIBeenPwnedApiClient()
+        + GetHashSuffixes(hashPrefix : string) : string
+    }
+
+    class HaveIBeenPwnedPasswordVerifierAdapter <<Adapter>> {
+        - _apiClient : IHaveIBeenPwnedApiClient
+
+        + Name : string
+        + HashAlgorithmName : string
+        + HaveIBeenPwnedPasswordVerifierAdapter(apiClient : IHaveIBeenPwnedApiClient)
+        + IsSafe(passwordHash : string) : bool
     }
 }
 
+' Layout helpers
+Program -[hidden]down- PasswordService
+PasswordService -[hidden]down- PasswordOptions
+PasswordOptions -[hidden]down- IAlphabet
+IAlphabet -[hidden]down- CharacterReplacementService
+CharacterReplacementService -[hidden]down- IPasswordGenerationStrategy
+IPasswordGenerationStrategy -[hidden]down- PasswordOptionsValidator
+
+' Alphabet relationships
 LatinAlphabet ..|> IAlphabet
 CyrillicAlphabet ..|> IAlphabet
+PasswordOptions "1" o-- "0..*" IAlphabet
 
+' Generation relationships
 RandomPasswordStrategy ..|> IPasswordGenerationStrategy
 DictionaryPasswordStrategy ..|> IPasswordGenerationStrategy
-
-ConsoleLogger ..|> ILogger
-
-PasswordService --> ILogger
-PasswordService *-- PasswordOptionsValidator
-PasswordService *-- PasswordGenerationFactory
-PasswordService *-- CharacterReplacementService
-PasswordService *-- ExternalPasswordValidationService
 
 PasswordGenerationFactory ..> IPasswordGenerationStrategy
 PasswordGenerationFactory ..> RandomPasswordStrategy
 PasswordGenerationFactory ..> DictionaryPasswordStrategy
 
-PasswordOptions "1" o-- "0..*" IAlphabet
+' Logging relationships
+ConsoleLogger ..|> ILogger
+ConsoleLogger --> LogLevel
 
+' Validation relationships
 ExternalPasswordValidationService --> ILogger
 ExternalPasswordValidationService "1" o-- "0..*" IExternalPasswordVerifier
 
+HaveIBeenPwnedApiClient ..|> IHaveIBeenPwnedApiClient
+HaveIBeenPwnedPasswordVerifierAdapter ..|> IExternalPasswordVerifier
+HaveIBeenPwnedPasswordVerifierAdapter --> IHaveIBeenPwnedApiClient
+
+' Facade relationships
+PasswordService --> ILogger
+PasswordService *-- PasswordOptionsValidator
+PasswordService *-- PasswordGenerationFactory
+PasswordService *-- CharacterReplacementService
+PasswordService *-- ExternalPasswordValidationService
+PasswordService ..> PasswordOptions
+PasswordService ..> IPasswordGenerationStrategy
+PasswordService ..> IExternalPasswordVerifier
+
+' Program relationships
 Program ..> PasswordService
 Program ..> PasswordOptions
 Program ..> ConsoleLogger
 Program ..> LogLevel
+Program ..> LatinAlphabet
+Program ..> CyrillicAlphabet
+Program ..> HaveIBeenPwnedApiClient
+Program ..> HaveIBeenPwnedPasswordVerifierAdapter
+
 @enduml
