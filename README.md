@@ -186,7 +186,10 @@ Hiermee is ondersteuning voor het Russisch-cyrillische alfabet toegevoegd zoals 
 ---
 
 
+
 Externe validators moeten `IExternalPasswordVerifier` implementeren.
+
+Nieuwe externe validators kunnen worden toegevoegd door een nieuwe klasse te maken die `IExternalPasswordVerifier` implementeert. Daarna kan deze runtime toegevoegd worden met `passwordService.AddExternalVerifier(...)`, zonder bestaande validatiecode aan te passen.
 
 Voorbeeld:
 
